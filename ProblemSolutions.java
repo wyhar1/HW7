@@ -1,12 +1,13 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Wyatt Harris COMP 272 001
  *
  *   This java file contains the problem solutions for the methods selectionSort,
  *   mergeSortDivisibleByKFirst, asteroidsDestroyed, and numRescueCanoes methods.
  *
  ********************************************************************/
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ProblemSolutions {
@@ -32,18 +33,25 @@ public class ProblemSolutions {
         selectionSort(values, true);
     }
 
-    public static void selectionSort(int[] values, boolean ascending ) {
-
+    public static void selectionSort(int[] values, boolean ascending) {
         int n = values.length;
 
         for (int i = 0; i < n - 1; i++) {
+            int min = i;
 
-            // YOU CODE GOES HERE -- COMPLETE THE INNER LOOP OF THIS
-            // "SELECTION SORT" ALGORITHM.
-            // DO NOT FORGET TO ADD YOUR NAME / SECTION ABOVE
-
+            for (int j = i + 1; j < n; j++) {
+                if (ascending && values[j] < values[min]) {
+                    min = j;
+                } else if (!ascending && values[j] > values[min]) {
+                    min = j;
+                }
+            }
+            if (min != i) {
+                int temp = values[i];
+                values[i] = values[min];
+                values[min] = temp;
+            }
         }
-
     } // End class selectionSort
 
 
@@ -89,7 +97,6 @@ public class ProblemSolutions {
     /*
      * The merging portion of the merge sort, divisible by k first
      */
-
     private void mergeDivisbleByKFirst(int arr[], int k, int left, int mid, int right)
     {
         // YOUR CODE GOES HERE, THIS METHOD IS NO MORE THAN THE STANDARD MERGE PORTION
@@ -102,10 +109,41 @@ public class ProblemSolutions {
         // TO CODE WITH A SPACE COMPLEXITY OF O(N LOG N), WHICH IS FINE FOR PURPOSES
         // OF THIS PROGRAMMING EXERCISES.
 
-        return;
+        //Side note, Leo gave us a problem at the end of DS1 that was to do MergeSort in place.
+        //He said it was the first problem for some of his grad students, funny.
+        //I think the tests are wrong.
+        int[] temp = new int[right - left + 1];
+        int i = left;
+        int j = mid + 1;
+        int idx = 0;
 
+        while (i <= mid && j <= right) {
+            if (arr[i] <= arr[j]) {
+                temp[idx++] = arr[i++];
+            }
+            else {
+                temp[idx++] = arr[j++];
+            }
+        }
+        while (i <= mid) {
+            temp[idx++] = arr[i++];
+        }
+
+        while (j <= right) {
+            temp[idx++] = arr[j++];
+        }
+        idx = left;
+        for (int z = 0; z < temp.length; z++) {
+            if (temp[z] % k == 0) {
+                arr[idx++] = temp[z];
+            }
+        }
+        for (int z = 0; z < temp.length; z++) {
+            if (temp[z] % k != 0) {
+                arr[idx++] = temp[z];
+            }
+        }
     }
-
 
     /**
      * Method asteroidsDestroyed
@@ -155,8 +193,17 @@ public class ProblemSolutions {
     public static boolean asteroidsDestroyed(int mass, int[] asteroids) {
 
         // YOUR CODE GOES HERE, CONSIDER USING ARRAYS.SORT()
-
-        return false;
+        int massCopy = mass;
+        Arrays.sort(asteroids);
+        for (int i = 0; i < asteroids.length; i++) {
+            if (asteroids[i] > massCopy) {
+                return false;
+            }
+            else{
+                massCopy += asteroids[i];
+            }
+        }
+        return true;
 
     }
 
@@ -193,10 +240,33 @@ public class ProblemSolutions {
     public static int numRescueSleds(int[] people, int limit) {
 
         // YOUR CODE GOES HERE, CONSIDER USING ARRAYS.SORT
+        Arrays.sort(people);
+        int count = 0;
+        int massSum = 0;
+        ArrayList<Integer> peopleList = new ArrayList<>();
+        for (int person : people) {
+            peopleList.add(person);
+        }
+        while (!peopleList.isEmpty()) {
+            int temp = 0;
+            while (massSum < limit) {
+                temp = peopleList.removeFirst();
+                massSum += temp;
+            }
+            count++;
+            if (massSum != limit) {
+                massSum = temp;
+            }
+            else {
+                massSum = 0;
+            }
 
-        return -1;
+        }
+        if (massSum != 0){
+            count++;
+        }
+        return count;
 
     }
 
 } // End Class ProblemSolutions
-
