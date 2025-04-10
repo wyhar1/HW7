@@ -111,37 +111,42 @@ public class ProblemSolutions {
 
         //Side note, Leo gave us a problem at the end of DS1 that was to do MergeSort in place.
         //He said it was the first problem for some of his grad students, funny.
-        //I think the tests are wrong.
-        int[] temp = new int[right - left + 1];
-        int i = left;
-        int j = mid + 1;
-        int idx = 0;
+        int leftPointer = left;
+        int rightPointer = mid + 1;
+        int mergePlace = 0;
 
-        while (i <= mid && j <= right) {
-            if (arr[i] <= arr[j]) {
-                temp[idx++] = arr[i++];
+        int[] mergedArray = new int[right - left + 1];
+
+        while(leftPointer <= mid && rightPointer <= right){
+            if(arr[leftPointer] % k == 0 && arr[rightPointer] % k != 0){
+                mergedArray[mergePlace++] = arr[leftPointer++];
+            }
+            else if(arr[rightPointer] % k == 0 && arr[leftPointer] % k != 0){
+                mergedArray[mergePlace++] = arr[rightPointer++];
+            }
+            else if(arr[leftPointer] % k == 0){
+                mergedArray[mergePlace++] = arr[leftPointer++];
+            }
+            else if(arr[rightPointer] % k == 0){
+                mergedArray[mergePlace++] = arr[rightPointer++];
             }
             else {
-                temp[idx++] = arr[j++];
+                if(arr[leftPointer] <= arr[rightPointer]){
+                    mergedArray[mergePlace++] = arr[leftPointer++];
+                }
+                else {
+                    mergedArray[mergePlace++] = arr[rightPointer++];
+                }
             }
         }
-        while (i <= mid) {
-            temp[idx++] = arr[i++];
+        while(leftPointer <= mid){
+            mergedArray[mergePlace++] = arr[leftPointer++];
         }
-
-        while (j <= right) {
-            temp[idx++] = arr[j++];
+        while(rightPointer <= right){
+            mergedArray[mergePlace++] = arr[rightPointer++];
         }
-        idx = left;
-        for (int z = 0; z < temp.length; z++) {
-            if (temp[z] % k == 0) {
-                arr[idx++] = temp[z];
-            }
-        }
-        for (int z = 0; z < temp.length; z++) {
-            if (temp[z] % k != 0) {
-                arr[idx++] = temp[z];
-            }
+        for(int z = 0; z < mergedArray.length; z++){
+            arr[left + z] = mergedArray[z];
         }
     }
 
